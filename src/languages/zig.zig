@@ -13,16 +13,21 @@ pub fn compileZig(file: []const u8, output_path: []const u8) !void {
     defer allocator.free(emit_arg);
     try args.append(emit_arg);
 
-    const result = try std.process.Child.run(.{
-        .allocator = allocator,
-        .argv = args.items,
-        .cwd = null,
-        .env_map = null,
-    });
+    var child = std.process.Child.init(args.items, allocator);
+    try child.spawn();
+    _ = try child.wait();
+}
 
-    if (result.stderr.len > 0) {
-        std.debug.print("Zig Compilation Errors:\n{s}\n", .{result.stderr});
-    } else {
-        std.debug.print("Zig Compiled Successfully: {s} → {s}\n", .{ file, output_path });
-    }
+pub fn runZig(file: []const u8) !void {
+    const allocator = std.heap.page_allocator;
+    var args = std.ArrayList([]const u8).init(allocator);
+    defer args.deinit();
+
+    try args.append("zig");
+    try args.append("run");
+    try args.append(file);
+
+    var child = std.process.Child.init(args.items, allocator);
+    try child.spawn();
+    _ = try child.wait();
 }

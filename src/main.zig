@@ -26,12 +26,6 @@ pub fn main() !void {
     var output_dir: ?[]const u8 = null;
     var is_package: bool = false;
 
-    // Check file existence first
-    if (!utils.fileExists(file)) {
-        std.debug.print("Error: File {s} does not exist.\n", .{file});
-        return;
-    }
-
     if (std.mem.eql(u8, command, "build")) {
         // Handle build command flags
         if (args.len > 4 and std.mem.eql(u8, args[3], "--out")) {
@@ -39,20 +33,27 @@ pub fn main() !void {
         }
         try handleBuild(file, output_dir);
     } else if (std.mem.eql(u8, command, "run")) {
-        if (args.len > 3) {
-            if (std.mem.eql(u8, args[3], "-p")) {
-                if (args.len > 4) {
-                    output_dir = args[4];
-                    is_package = true;
+        if (std.mem.endsWith(u8, file, ".class")) {
+            if (args.len > 3) {
+                if (std.mem.eql(u8, args[3], "-p")) {
+                    if (args.len > 4) {
+                        output_dir = args[4];
+                        is_package = true;
+                    } else {
+                        std.debug.print("Error: Package path not provided after -p flag\n", .{});
+                        return;
+                    }
                 } else {
-                    std.debug.print("Error: Package path not provided after -p flag\n", .{});
-                    return;
+                    output_dir = args[3];
                 }
-            } else {
-                output_dir = args[3];
             }
+            try java.runJava(file, output_dir, is_package);
+        } else if (std.mem.endsWith(u8, file, ".zig")) {
+            try zigc.runZig(file);
+        } else {
+            std.debug.print("Unsupported file type for run command: {s}\n", .{file});
+            return;
         }
-        try java.runJava(file, output_dir, is_package);
     } else {
         std.debug.print("Unknown command: {s}\n", .{command});
     }

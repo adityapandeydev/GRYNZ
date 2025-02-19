@@ -61,3 +61,7 @@ zig-out/bin/grynz run javaFiles.Main --out ./bin
 
 ## Contributing
 This project is still in early development, and contributions are welcome. If you have suggestions, bug reports, or feature requests, feel free to open an issue or contribute via pull requests.
+
+## License
+Grynz is licensed under the **CC BY-NC-ND 4.0** license, meaning you **cannot** fork, modify, or use it commercially.  
+However, contributions are welcome! See the [LICENSE](LICENSE) file for details.

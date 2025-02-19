@@ -1,0 +1,6 @@
+.zig-cache
+bin
+cppFiles
+cFiles
+rustFiles
+goFiles

@@ -6,6 +6,7 @@ const go = @import("languages/go.zig");
 const java = @import("languages/java.zig");
 const rust = @import("languages/rust.zig");
 const zigc = @import("languages/zig.zig");
+const utils = @import("utils.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -23,25 +24,35 @@ pub fn main() !void {
     const command = args[1];
     const file = args[2];
     var output_dir: ?[]const u8 = null;
+    var is_package: bool = false;
 
-    if (args.len > 4 and std.mem.eql(u8, args[3], "--out")) {
-        output_dir = args[4];
+    // Check file existence first
+    if (!utils.fileExists(file)) {
+        std.debug.print("Error: File {s} does not exist.\n", .{file});
+        return;
     }
 
     if (std.mem.eql(u8, command, "build")) {
-        if (std.fs.cwd().access(file, .{})) |_| {
-            try handleBuild(file, output_dir);
-        } else |_| {
-            std.debug.print("Error: File {s} does not exist.\n", .{file});
-            return;
+        // Handle build command flags
+        if (args.len > 4 and std.mem.eql(u8, args[3], "--out")) {
+            output_dir = args[4];
         }
+        try handleBuild(file, output_dir);
     } else if (std.mem.eql(u8, command, "run")) {
-        if (std.mem.endsWith(u8, file, ".java") or std.fs.cwd().access(file, .{})) |_| {
-            try java.runJava(file, output_dir);
-        } else |_| {
-            std.debug.print("Error: File {s} does not exist.\n", .{file});
-            return;
+        if (args.len > 3) {
+            if (std.mem.eql(u8, args[3], "-p")) {
+                if (args.len > 4) {
+                    output_dir = args[4];
+                    is_package = true;
+                } else {
+                    std.debug.print("Error: Package path not provided after -p flag\n", .{});
+                    return;
+                }
+            } else {
+                output_dir = args[3];
+            }
         }
+        try java.runJava(file, output_dir, is_package);
     } else {
         std.debug.print("Unknown command: {s}\n", .{command});
     }
@@ -54,14 +65,17 @@ fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
     const filename_no_ext = filename_start[0..dot_index];
     var output_path: []const u8 = undefined;
 
+    // Create output directory if it doesn't exist
+    if (output_dir) |dir| {
+        std.fs.cwd().makeDir(dir) catch |err| {
+            if (err != error.PathAlreadyExists) {
+                return err;
+            }
+        };
+    }
+
     if (std.mem.endsWith(u8, file, ".java")) {
-        if (output_dir) |dir| {
-            std.debug.print("Running Java: java -cp {s} {s}\n", .{ dir, file });
-            try java.runJava(file, dir);
-        } else {
-            std.debug.print("Running Java: java {s}\n", .{file});
-            try java.runJava(file, null);
-        }
+        output_path = output_dir orelse "./";
     } else {
         const ext = if (builtin.os.tag == .windows) ".exe" else ".out";
         if (output_dir) |dir| {

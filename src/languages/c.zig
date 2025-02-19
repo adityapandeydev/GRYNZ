@@ -19,7 +19,7 @@ pub fn compileC(file: []const u8, output_dir: ?[]const u8) !void {
         const output = try std.fs.path.join(allocator, &.{ dir, name });
         defer allocator.free(output); // Free after the process is done
         try args.append(output);
-
+        
         // Spawn the process
         var child = std.process.Child.init(args.items, allocator);
         try child.spawn();

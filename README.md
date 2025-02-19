@@ -10,7 +10,7 @@ Grynz is in its early development stage and currently supports the following lan
 - **Rust** (via `rustc`)
 - **Go** (via `go build`)
 - **Java** (via `javac` and `java` for execution)
-- **Zig** (via `zig build-exe`)
+- **Zig** (via `zig build-exe` and `zig run` to compile and output instantly)
 
 ## Features Implemented
 ### Compilation System
@@ -54,7 +54,7 @@ zig-out/bin/grynz run javaFiles.Main --out ./bin
 - **Compiler Auto-Installation:**
   - If a required compiler is missing, prompt the user to install it.
 - **More Language Support:**
-  - Plan to add support for C#, TypeScript, and Gleam etc.
+  - Plan to add support for C#, TypeScript, Gleam etc.
 - **More Advanced Execution Handling:**
   - Support executing compiled C/C++/Rust binaries directly.
   - Support running scripts (Python, JavaScript) in future versions.

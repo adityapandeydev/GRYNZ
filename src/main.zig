@@ -6,7 +6,6 @@ const go = @import("languages/go.zig");
 const java = @import("languages/java.zig");
 const rust = @import("languages/rust.zig");
 const zigc = @import("languages/zig.zig");
-const utils = @import("utils.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -24,12 +23,6 @@ pub fn main() !void {
     const command = args[1];
     const file = args[2];
     var output_dir: ?[]const u8 = null;
-
-    // Check file existence first
-    if (!utils.fileExists(file)) {
-        std.debug.print("Error: File {s} does not exist.\n", .{file});
-        return;
-    }
 
     if (std.mem.eql(u8, command, "build")) {
         // Handle build command flags

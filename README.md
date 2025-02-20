@@ -7,7 +7,7 @@ Grynz is a modular, universal compiler designed to compile multiple programming 
 Grynz is in its early development stage and currently supports the following languages:
 - 🏗️ **C** (via `gcc`)
 - 🏗️ **C++** (via `g++`)
-- ☕ **Java** (via `javac` and `java` for execution)
+- ♨️ **Java** (via `javac` and `java` for execution)
 - 🐹 **Go** (via `go build`)
 - 🐍 **Python** (via `python` for execution, and `Nuitka` for binary compilation, although not recommended)
 - 🦀 **Rust** (via `rustc`)
@@ -72,4 +72,3 @@ This project is still in early development, and contributions are welcome. If yo
 ## 📜 License
 Grynz is licensed under the **CC BY-NC-ND 4.0** license, meaning you **cannot** fork, modify, or use it commercially.  
 However, contributions are welcome! See the [LICENSE](LICENSE) file for details.
-

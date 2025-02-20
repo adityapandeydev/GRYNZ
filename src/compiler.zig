@@ -4,9 +4,10 @@ const c = @import("languages/c.zig");
 const cpp = @import("languages/cpp.zig");
 const go = @import("languages/go.zig");
 const java = @import("languages/java.zig");
+const javascript = @import("languages/javascript.zig");
+const python = @import("languages/python.zig");
 const rust = @import("languages/rust.zig");
 const zigc = @import("languages/zig.zig");
-const python = @import("languages/python.zig");
 
 pub fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
     // Create output directory if it doesn't exist
@@ -26,6 +27,8 @@ pub fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
         try go.compileGo(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".java")) {
         try java.compileJava(file, output_dir);
+    } else if (std.mem.endsWith(u8, file, ".js")) {
+        try javascript.compileJavascript(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".py")) {
         try python.compilePython(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".rs")) {
@@ -41,6 +44,8 @@ pub fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
 pub fn handleRun(file: []const u8, remaining_args: []const []const u8) !void {
     if (std.mem.endsWith(u8, file, ".class")) {
         try java.runJava(file, remaining_args);
+    } else if (std.mem.endsWith(u8, file, ".js")) {
+        try javascript.runJavascript(file);
     } else if (std.mem.endsWith(u8, file, ".py")) {
         try python.runPython(file);
     } else if (std.mem.endsWith(u8, file, ".zig")) {

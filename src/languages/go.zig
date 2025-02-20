@@ -1,4 +1,5 @@
 const std = @import("std");
+const utils = @import("../utils.zig");
 
 pub fn compileGo(file: []const u8, output_dir: ?[]const u8) !void {
     const allocator = std.heap.page_allocator;
@@ -18,7 +19,5 @@ pub fn compileGo(file: []const u8, output_dir: ?[]const u8) !void {
     try args.append(file);
 
     // Spawn the process
-    var child = std.process.Child.init(args.items, allocator);
-    try child.spawn();
-    _ = try child.wait();
+    try utils.executeCommand(allocator, args.items);
 }

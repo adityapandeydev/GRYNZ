@@ -1,4 +1,5 @@
 const std = @import("std");
+const utils = @import("../utils.zig");
 
 pub fn compileJava(file: []const u8, output_dir: ?[]const u8) !void {
     const allocator = std.heap.page_allocator;
@@ -13,10 +14,7 @@ pub fn compileJava(file: []const u8, output_dir: ?[]const u8) !void {
         try args.append(dir);
     }
 
-    var child = std.process.Child.init(args.items, allocator);
-    child.stderr_behavior = .Inherit;
-    try child.spawn();
-    _ = try child.wait();
+    try utils.executeCommand(allocator, args.items);
 }
 
 pub fn runJava(file: []const u8, remaining_args: []const []const u8) !void {
@@ -95,9 +93,7 @@ pub fn runJava(file: []const u8, remaining_args: []const []const u8) !void {
     const cmd = try std.mem.join(allocator, " ", args.items);
 
     // Run Java process safely
-    var child = std.process.Child.init(args.items, allocator);
-    try child.spawn();
-    _ = try child.wait();
+    try utils.executeCommand(allocator, args.items);
 
     allocator.free(cmd);
 }

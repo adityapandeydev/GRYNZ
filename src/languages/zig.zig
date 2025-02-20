@@ -1,5 +1,6 @@
 const std = @import("std");
 const builtin = @import("builtin");
+const utils = @import("../utils.zig");
 
 pub fn compileZig(file: []const u8, output_dir: ?[]const u8) !void {
     const allocator = std.heap.page_allocator;
@@ -31,10 +32,7 @@ pub fn compileZig(file: []const u8, output_dir: ?[]const u8) !void {
     try args.append(emit_arg);
 
     // Spawn the process
-    var child = std.process.Child.init(args.items, allocator);
-    child.stderr_behavior = .Inherit; // Show errors directly in the console
-    try child.spawn();
-    _ = try child.wait();
+    try utils.executeCommand(allocator, args.items);
 
     // Free allocated memory
     if (output_dir != null) allocator.free(final_output_path);
@@ -51,7 +49,5 @@ pub fn runZig(file: []const u8) !void {
     try args.append("run");
     try args.append(file);
 
-    var child = std.process.Child.init(args.items, allocator);
-    try child.spawn();
-    _ = try child.wait();
+    try utils.executeCommand(allocator, args.items);
 }

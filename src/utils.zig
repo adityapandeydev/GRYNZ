@@ -1,11 +1,8 @@
 const std = @import("std");
 
-pub fn fileExists(path: []const u8) bool {
-    std.fs.cwd().access(path, .{}) catch |err| {
-        return switch (err) {
-            error.FileNotFound => false,
-            else => true,
-        };
-    };
-    return true;
+pub fn executeCommand(allocator: std.mem.Allocator, args: []const []const u8) !void {
+    var child = std.process.Child.init(args, allocator);
+    child.stderr_behavior = .Inherit; // Keep error output visible
+    try child.spawn();
+    _ = try child.wait();
 }

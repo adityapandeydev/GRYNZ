@@ -1,4 +1,5 @@
 const std = @import("std");
+const utils = @import("../utils.zig");
 
 pub fn compileC(file: []const u8, output_dir: ?[]const u8) !void {
     const allocator = std.heap.page_allocator;
@@ -21,16 +22,12 @@ pub fn compileC(file: []const u8, output_dir: ?[]const u8) !void {
         try args.append(output);
         
         // Spawn the process
-        var child = std.process.Child.init(args.items, allocator);
-        try child.spawn();
-        _ = try child.wait();
+        try utils.executeCommand(allocator, args.items);
     } else {
         // Just use filename in current directory
         try args.append(name);
 
         // Spawn the process
-        var child = std.process.Child.init(args.items, allocator);
-        try child.spawn();
-        _ = try child.wait();
+        try utils.executeCommand(allocator, args.items);
     }
 }

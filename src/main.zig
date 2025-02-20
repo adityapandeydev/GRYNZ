@@ -6,6 +6,7 @@ const go = @import("languages/go.zig");
 const java = @import("languages/java.zig");
 const rust = @import("languages/rust.zig");
 const zigc = @import("languages/zig.zig");
+const python = @import("languages/python.zig");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -33,6 +34,8 @@ pub fn main() !void {
     } else if (std.mem.eql(u8, command, "run")) {
         if (std.mem.endsWith(u8, file, ".class")) {
             try java.runJava(file, args[3..]);
+        } else if (std.mem.endsWith(u8, file, ".py")) {
+            try python.runPython(file);
         } else if (std.mem.endsWith(u8, file, ".zig")) {
             try zigc.runZig(file);
         } else {
@@ -62,6 +65,8 @@ fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
         try go.compileGo(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".java")) {
         try java.compileJava(file, output_dir);
+    } else if (std.mem.endsWith(u8, file, ".py")){
+        try python.compilePython(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".rs")) {
         try rust.compileRust(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".zig")) {

@@ -19,3 +19,6 @@ pub fn build(b: *std.Build) void {
     }
     b.step("run", "Run Grynz").dependOn(&run_cmd.step);
 }
+
+// zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-musl
+// zig build -Doptimize=ReleaseFast -Dtarget=x86_64-windows-msvc

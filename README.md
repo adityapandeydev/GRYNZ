@@ -7,9 +7,10 @@ Grynz is a modular, universal compiler designed to compile multiple programming 
 Grynz is in its early development stage and currently supports the following languages:
 - **C** (via `gcc`)
 - **C++** (via `g++`)
-- **Rust** (via `rustc`)
-- **Go** (via `go build`)
 - **Java** (via `javac` and `java` for execution)
+- **Go** (via `go build`)
+- **Python** (via `python` for execution, and `Nuitka` for binary compilation, although not recommended)
+- **Rust** (via `rustc`)
 - **Zig** (via `zig build-exe` and `zig run` to compile and output instantly)
 
 ## Features Implemented
@@ -22,6 +23,12 @@ Grynz is in its early development stage and currently supports the following lan
 - Supports running Java programs with package handling.
 - Supports `java -cp bin Main` format for running compiled Java files.
 - Supports package-based execution: `java -cp bin javaFiles.Main`.
+
+### Python Execution & Compilation  
+- **Execution:** Python scripts can be run directly using `grynz run script.py`.  
+- **Binary Compilation:**  
+  - **Grynz** supports compiling Python scripts into standalone binaries using **Nuitka**.  
+  - **Warning:** Python does not natively compile to binaries. Nuitka compilation is **optional and may not be efficient** for all use cases.
 
 ### File Handling
 - Ensures uniformity by checking for file existence before attempting compilation or execution.
@@ -57,7 +64,7 @@ zig-out/bin/grynz run javaFiles.Main --out ./bin
   - Plan to add support for C#, TypeScript, Gleam etc.
 - **More Advanced Execution Handling:**
   - Support executing compiled C/C++/Rust binaries directly.
-  - Support running scripts (Python, JavaScript) in future versions.
+  - Support running scripts (JavaScript, TypeScript, etc) in future versions.
 
 ## Contributing
 This project is still in early development, and contributions are welcome. If you have suggestions, bug reports, or feature requests, feel free to open an issue or contribute via pull requests.

@@ -40,7 +40,7 @@ pub fn compileJavascript(file: []const u8, output_dir: ?[]const u8) !void {
             try args.append("node18-win-x64");
         }
 
-        // Execute the pkg command
+        // Spawn the process
         try utils.executeCommand(allocator, args.items);
     } else {
         std.debug.print("Aborted.\n", .{});

@@ -7,6 +7,7 @@ const java = @import("languages/java.zig");
 const javascript = @import("languages/javascript.zig");
 const python = @import("languages/python.zig");
 const rust = @import("languages/rust.zig");
+const typescript = @import("languages/typescript.zig");
 const zigc = @import("languages/zig.zig");
 
 pub fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
@@ -33,6 +34,8 @@ pub fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
         try python.compilePython(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".rs")) {
         try rust.compileRust(file, output_dir);
+    } else if (std.mem.endsWith(u8, file, ".ts")) {
+        try typescript.compileTypescript(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".zig")) {
         try zigc.compileZig(file, output_dir);
     } else {
@@ -42,12 +45,20 @@ pub fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
 }
 
 pub fn handleRun(file: []const u8, remaining_args: []const []const u8) !void {
+    var output_dir: ?[]const u8 = null;
+
+    if (remaining_args.len > 1 and std.mem.eql(u8, remaining_args[0], "--out")) {
+        output_dir = remaining_args[1];
+    }
+
     if (std.mem.endsWith(u8, file, ".class")) {
         try java.runJava(file, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".js")) {
         try javascript.runJavascript(file);
     } else if (std.mem.endsWith(u8, file, ".py")) {
         try python.runPython(file);
+    } else if (std.mem.endsWith(u8, file, ".ts")) {
+        try typescript.runTypescript(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".zig")) {
         try zigc.runZig(file);
     } else {

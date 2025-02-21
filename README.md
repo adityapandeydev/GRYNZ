@@ -5,13 +5,15 @@ Grynz is a modular, universal compiler designed to compile multiple programming 
 
 ## 📌 Current Status
 Grynz is in its early development stage and currently supports the following languages:
-- 🏗️ **C** (via `gcc`)
-- 🏗️ **C++** (via `g++`)
-- ♨️ **Java** (via `javac` and `java` for execution)
-- 🐹 **Go** (via `go build`)
-- 🐍 **Python** (via `python` for execution, and `Nuitka` for binary compilation, although not recommended)
-- 🦀 **Rust** (via `rustc`)
-- ⚡ **Zig** (via `zig build-exe` and `zig run` to compile and output instantly)
+- <img src="LanguageSvgs\c-original.svg" alt="JavaScript" width="20" height="15"/> **C** (via `gcc`)
+- <img src="LanguageSvgs\cplusplus-original.svg" alt="JavaScript" width="20" height="15"/> **C++** (via `g++`)
+- <img src="LanguageSvgs\java-original.svg" alt="JavaScript" width="20" height="15"/> **Java** (via `javac` and `java` for execution)
+- <img src="LanguageSvgs\javascript-original.svg" alt="JavaScript" width="20" height="15"/> **JavaScript** (via `node` for execution, and `pkg` for binary compilation)
+- <img src="LanguageSvgs\go-original.svg" alt="JavaScript" width="20" height="15"/> **Go** (via `go build`)
+- <img src="LanguageSvgs\python-original.svg" alt="JavaScript" width="20" height="15"/> **Python** (via `python` for execution, and `Nuitka` for binary compilation, although not recommended)
+- <img src="LanguageSvgs\rust-original.svg" alt="JavaScript" width="20" height="15"/> **Rust** (via `rustc`)
+- <img src="LanguageSvgs\typescript-original.svg" alt="JavaScript" width="20" height="15"/> **TypeScript** (via `tsc` for compilation to JavaScript, and `node` for execution)
+- <img src="LanguageSvgs\zig-original.svg" alt="JavaScript" width="20" height="15"/>  **Zig** (via `zig build-exe` and `zig run` to compile and output instantly)
 
 ## 🔧 Features Implemented
 ### 🔨 Compilation System
@@ -19,16 +21,26 @@ Grynz is in its early development stage and currently supports the following lan
 - Supports specifying an output directory using the `--out` flag (except for Zig, which does not store compiled output without project initialization).
 - Handles compilation errors and outputs relevant messages.
 
-### ☕ Java Execution System
+### <img src="LanguageSvgs\java-original.svg" alt="JavaScript" width="30" height="30"/> Java Execution System
 - Supports running Java programs with package handling.
 - Supports `java -cp bin Main` format for running compiled Java files.
 - Supports package-based execution: `java -cp bin javaFiles.Main`.
 
-### 🐍 Python Execution & Compilation  
+### <img src="LanguageSvgs\python-original.svg" alt="JavaScript" width="30" height="30"/> Python Execution & Compilation  
 - **Execution:** Python scripts can be run directly using `grynz run script.py`.  
 - **Binary Compilation:**  
   - **Grynz** supports compiling Python scripts into standalone binaries using **Nuitka**.  
   - **⚠️ Warning:** Python does not natively compile to binaries. Nuitka compilation is **optional and may not be efficient** for all use cases.
+
+### <img src="LanguageSvgs\javascript-original.svg" alt="JavaScript" width="30" height="30"/> JavaScript & <img src="LanguageSvgs\typescript-original.svg" alt="JavaScript" width="30" height="30"/> TypeScript Execution & Compilation  
+- **JavaScript Execution:** JavaScript files can be run directly using `grynz run script.js`.  
+- **JavaScript Binary Compilation:**  
+  - **Grynz** supports compiling JavaScript files into standalone `.exe` binaries using **pkg**.  
+  - **⚠️ Warning:** Using `pkg` will install `node_18` on your system, regardless of the Node.js version you currently have installed.  
+- **TypeScript Execution:** TypeScript files are first compiled to JavaScript using `tsc`, and the resulting JavaScript file can be executed using `node`.  
+- **TypeScript Binary Compilation:**  
+  - TypeScript does not natively compile to `.exe` files. If you want to create a binary, you must first compile the TypeScript file to JavaScript using `tsc`, and then use `pkg` to compile the JavaScript file into a binary.  
+  - Both steps (TypeScript to JavaScript, and JavaScript to binary) can be handled by **Grynz**.
 
 ### 📂 File Handling
 - Ensures uniformity by checking for file existence before attempting compilation or execution.
@@ -61,7 +73,7 @@ zig-out/bin/grynz run javaFiles.Main --out ./bin
 - **🔧 Compiler Auto-Installation:**
   - If a required compiler is missing, prompt the user to install it.
 - **🌍 More Language Support:**
-  - Plan to add support for C#, TypeScript, Gleam etc.
+  - Plan to add support for C#, Nim, Erlang, Elixir, Gleam etc.
 - **⚙️ More Advanced Execution Handling:**
   - Support executing compiled C/C++/Rust binaries directly.
   - Support running scripts (JavaScript, TypeScript, etc) in future versions.

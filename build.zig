@@ -20,6 +20,6 @@ pub fn build(b: *std.Build) void {
     b.step("run", "Run Grynz").dependOn(&run_cmd.step);
 }
 
-// zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-musl
-// zig build -Doptimize=ReleaseFast -Dtarget=x86_64-windows-msvc
+// zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-musl --prefix .\zig-out\bin\linux
+// zig build -Doptimize=ReleaseFast -Dtarget=x86_64-windows-msvc --prefix .\zig-out\bin\windows
 // zig build -Doptimize=ReleaseFast -Dtarget=aarch64-macos --prefix .\zig-out\bin\macos 

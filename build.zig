@@ -22,3 +22,4 @@ pub fn build(b: *std.Build) void {
 
 // zig build -Doptimize=ReleaseFast -Dtarget=x86_64-linux-musl
 // zig build -Doptimize=ReleaseFast -Dtarget=x86_64-windows-msvc
+// zig build -Doptimize=ReleaseFast -Dtarget=aarch64-macos --prefix .\zig-out\bin\macos 

@@ -5,12 +5,36 @@ const cpp = @import("languages/cpp.zig");
 const go = @import("languages/go.zig");
 const java = @import("languages/java.zig");
 const javascript = @import("languages/javascript.zig");
+const kotlin = @import("languages/kotlin.zig");
 const python = @import("languages/python.zig");
 const rust = @import("languages/rust.zig");
 const typescript = @import("languages/typescript.zig");
 const zigc = @import("languages/zig.zig");
 
-pub fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
+pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
+    var output_dir: ?[]const u8 = null;
+    var include_runtime = false;
+
+    // Parse remaining arguments
+    var i: usize = 0;
+    while (i < remaining_args.len) {
+        if (std.mem.eql(u8, remaining_args[i], "--out")) {
+            if (i + 1 < remaining_args.len) {
+                output_dir = remaining_args[i + 1];
+                i += 2;
+            } else {
+                std.debug.print("Error: --out requires an output directory\n", .{});
+                return;
+            }
+        } else if (std.mem.eql(u8, remaining_args[i], "-include-runtime")) {
+            include_runtime = true;
+            i += 1;
+        } else {
+            std.debug.print("Unknown argument: {s}\n", .{remaining_args[i]});
+            return;
+        }
+    }
+
     // Create output directory if it doesn't exist
     if (output_dir) |dir| {
         std.fs.cwd().makeDir(dir) catch |err| {
@@ -30,6 +54,8 @@ pub fn handleBuild(file: []const u8, output_dir: ?[]const u8) !void {
         try java.compileJava(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".js")) {
         try javascript.compileJavascript(file, output_dir);
+    } else if (std.mem.endsWith(u8, file, ".kt")) {
+        try kotlin.compileKotlin(file, output_dir, include_runtime);
     } else if (std.mem.endsWith(u8, file, ".py")) {
         try python.compilePython(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".rs")) {
@@ -55,6 +81,8 @@ pub fn handleRun(file: []const u8, remaining_args: []const []const u8) !void {
         try java.runJava(file, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".js")) {
         try javascript.runJavascript(file);
+    } else if (std.mem.endsWith(u8, file, ".jar")) {
+        try kotlin.runKotlin(file);
     } else if (std.mem.endsWith(u8, file, ".py")) {
         try python.runPython(file);
     } else if (std.mem.endsWith(u8, file, ".ts")) {

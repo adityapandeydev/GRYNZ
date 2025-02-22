@@ -5,34 +5,35 @@ Grynz is a modular, universal compiler designed to compile multiple programming 
 
 ## 📌 Current Status
 Grynz is in its early development stage and currently supports the following languages:
-- <img src="LanguageSvgs\c-original.svg" alt="JavaScript" width="20" height="15"/> **C** (via `gcc`)
-- <img src="LanguageSvgs\cplusplus-original.svg" alt="JavaScript" width="20" height="15"/> **C++** (via `g++`)
-- <img src="LanguageSvgs\java-original.svg" alt="JavaScript" width="20" height="15"/> **Java** (via `javac` and `java` for execution)
+- <img src="LanguageSvgs\c-original.svg" alt="C" width="20" height="15"/> **C** (via `gcc`)
+- <img src="LanguageSvgs\cplusplus-original.svg" alt="CPP" width="20" height="15"/> **C++** (via `g++`)
+- <img src="LanguageSvgs\go-original.svg" alt="Go" width="20" height="15"/> **Go** (via `go build`)
+- <img src="LanguageSvgs\java-original.svg" alt="Java" width="20" height="15"/> **Java** (via `javac` and `java` for execution)
 - <img src="LanguageSvgs\javascript-original.svg" alt="JavaScript" width="20" height="15"/> **JavaScript** (via `node` for execution, and `pkg` for binary compilation)
-- <img src="LanguageSvgs\go-original.svg" alt="JavaScript" width="20" height="15"/> **Go** (via `go build`)
-- <img src="LanguageSvgs\python-original.svg" alt="JavaScript" width="20" height="15"/> **Python** (via `python` for execution, and `Nuitka` for binary compilation, although not recommended)
-- <img src="LanguageSvgs\rust-original.svg" alt="JavaScript" width="20" height="15"/> **Rust** (via `rustc`)
-- <img src="LanguageSvgs\typescript-original.svg" alt="JavaScript" width="20" height="15"/> **TypeScript** (via `tsc` for compilation to JavaScript, and `node` for execution)
-- <img src="LanguageSvgs\zig-original.svg" alt="JavaScript" width="20" height="15"/>  **Zig** (via `zig build-exe` and `zig run` to compile and output instantly)
+- <img src="LanguageSvgs\kotlin-original.svg" alt="Go" width="20" height="15"/> **Kotlin** (via `kotlinc` for compilation, and `java` for execution)
+- <img src="LanguageSvgs\python-original.svg" alt="Python" width="20" height="15"/> **Python** (via `python` for execution, and `Nuitka` for binary compilation, although not recommended)
+- <img src="LanguageSvgs\rust-original.svg" alt="Rust" width="20" height="15"/> **Rust** (via `rustc`)
+- <img src="LanguageSvgs\typescript-original.svg" alt="Typescript" width="20" height="15"/> **TypeScript** (via `tsc` for compilation to JavaScript, and `node` for execution)
+- <img src="LanguageSvgs\zig-original.svg" alt="Zig" width="20" height="15"/>  **Zig** (via `zig build-exe` and `zig run` to compile and output instantly)
 
 ## 🔧 Features Implemented
 ### 🔨 Compilation System
 - Detects file type based on extension and invokes the appropriate compiler.
-- Supports specifying an output directory using the `--out` flag (except for Zig, which does not store compiled output without project initialization).
+- Supports specifying an output directory using the `--out` flag.
 - Handles compilation errors and outputs relevant messages.
 
-### <img src="LanguageSvgs\java-original.svg" alt="JavaScript" width="30" height="30"/> Java Execution System
+### <img src="LanguageSvgs\java-original.svg" alt="Java" width="30" height="30"/> Java Execution System
 - Supports running Java programs with package handling.
 - Supports `java -cp bin Main` format for running compiled Java files.
 - Supports package-based execution: `java -cp bin javaFiles.Main`.
 
-### <img src="LanguageSvgs\python-original.svg" alt="JavaScript" width="30" height="30"/> Python Execution & Compilation  
+### <img src="LanguageSvgs\python-original.svg" alt="Python" width="30" height="30"/> Python Execution & Compilation  
 - **Execution:** Python scripts can be run directly using `grynz run script.py`.  
 - **Binary Compilation:**  
   - **Grynz** supports compiling Python scripts into standalone binaries using **Nuitka**.  
   - **⚠️ Warning:** Python does not natively compile to binaries. Nuitka compilation is **optional and may not be efficient** for all use cases.
 
-### <img src="LanguageSvgs\javascript-original.svg" alt="JavaScript" width="30" height="30"/> JavaScript & <img src="LanguageSvgs\typescript-original.svg" alt="JavaScript" width="30" height="30"/> TypeScript Execution & Compilation  
+### <img src="LanguageSvgs\javascript-original.svg" alt="JavaScript" width="30" height="30"/> JavaScript & <img src="LanguageSvgs\typescript-original.svg" alt="Typescript" width="30" height="30"/> TypeScript Execution & Compilation  
 - **JavaScript Execution:** JavaScript files can be run directly using `grynz run script.js`.  
 - **JavaScript Binary Compilation:**  
   - **Grynz** supports compiling JavaScript files into standalone `.exe` binaries using **pkg**.  
@@ -49,20 +50,20 @@ Grynz is in its early development stage and currently supports the following lan
 ## 🛠️ How to Use
 ### 🔨 Building a File
 ```sh
-zig-out/bin/grynz build <file> [--out <output_dir>]
+grynz build <file> [--out <output_dir>]
 ```
 Example:
 ```sh
-zig-out/bin/grynz build main.cpp --out ./bin
+grynz build main.cpp --out ./bin
 ```
 
 ### ▶️ Running a Java Program
 ```sh
-zig-out/bin/grynz run Main --out ./bin/javaFiles
+grynz run Main --out ./bin/javaFiles
 ```
 For package-based execution:
 ```sh
-zig-out/bin/grynz run javaFiles.Main --out ./bin
+grynz run javaFiles.Main --out ./bin
 ```
 
 ## 🔮 Future Plans

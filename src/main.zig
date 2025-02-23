@@ -2,7 +2,7 @@ const std = @import("std");
 const compiler = @import("compiler.zig");
 
 // Define the version as a comptime constant
-const version = "0.5.0-alpha";
+const version = "0.6.0-alpha";
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};

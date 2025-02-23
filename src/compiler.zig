@@ -11,25 +11,11 @@ const python = @import("languages/python.zig");
 const rust = @import("languages/rust.zig");
 const typescript = @import("languages/typescript.zig");
 const zigc = @import("languages/zig.zig");
+const utils = @import("utils.zig");
 
 pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
-    var output_dir: ?[]const u8 = null;
 
-    // Parse remaining arguments
-    var i: usize = 0;
-    while (i < remaining_args.len) {
-        if (std.mem.eql(u8, remaining_args[i], "--out")) {
-            if (i + 1 < remaining_args.len) {
-                output_dir = remaining_args[i + 1];
-                i += 2;
-            } else {
-                std.debug.print("Error: --out requires an output directory\n", .{});
-                return;
-            }
-        } else {
-            i += 1;
-        }
-    }
+    const output_dir = try utils.parseOutputDir(remaining_args);
 
     // Create output directory if it doesn't exist
     if (output_dir) |dir| {
@@ -59,7 +45,7 @@ pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
     } else if (std.mem.endsWith(u8, file, ".rs")) {
         try rust.compileRust(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".ts")) {
-        try typescript.compileTypescript(file, output_dir);
+        try typescript.compileTypescript(file, output_dir, true);
     } else if (std.mem.endsWith(u8, file, ".zig")) {
         try zigc.compileZig(file, output_dir);
     } else {
@@ -69,24 +55,6 @@ pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
 }
 
 pub fn handleRun(file: []const u8, remaining_args: []const []const u8) !void {
-    var output_dir: ?[]const u8 = null;
-
-    // Parse --out flag
-    var i: usize = 0;
-    while (i < remaining_args.len) {
-        if (std.mem.eql(u8, remaining_args[i], "--out")) {
-            if (i + 1 < remaining_args.len) {
-                output_dir = remaining_args[i + 1];
-                i += 2;
-            } else {
-                std.debug.print("Error: --out requires an output directory\n", .{});
-                return error.MissingOutputDir;
-            }
-        } else {
-            i += 1;
-        }
-    }
-
     if (std.mem.endsWith(u8, file, ".beam")) {
         try erlang.runErlang(file, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".class")) {
@@ -98,7 +66,7 @@ pub fn handleRun(file: []const u8, remaining_args: []const []const u8) !void {
     } else if (std.mem.endsWith(u8, file, ".py")) {
         try python.runPython(file);
     } else if (std.mem.endsWith(u8, file, ".ts")) {
-        try typescript.runTypescript(file, output_dir);
+        try typescript.runTypescript(file, remaining_args); // Pass remaining_args directly
     } else if (std.mem.endsWith(u8, file, ".zig")) {
         try zigc.runZig(file);
     } else {

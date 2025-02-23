@@ -1,15 +1,18 @@
 const std = @import("std");
 const utils = @import("../utils.zig");
 
-pub fn compileTypescript(file: []const u8, output_dir: ?[]const u8) !void {
+pub fn compileTypescript(file: []const u8, output_dir: ?[]const u8, printWarning: bool) !void {
     const allocator = std.heap.page_allocator;
     var args = std.ArrayList([]const u8).init(allocator);
     defer args.deinit();
 
-    std.debug.print(
-        \\Warning: You will have to manually run the compiled JavaScript file using `node`.
-        \\
-        , .{});
+    // Print the warning only if `printWarning` is true
+    if (printWarning) {
+        std.debug.print(
+            \\Warning: You will have to manually run the compiled JavaScript file using `node`.
+            \\
+            , .{});
+    }
     
     try args.append("tsc");
     try args.append(file);
@@ -24,8 +27,11 @@ pub fn compileTypescript(file: []const u8, output_dir: ?[]const u8) !void {
     try utils.executeCommand(allocator, args.items);
 }
 
-pub fn runTypescript(file: []const u8, output_dir: ?[]const u8) !void {
+pub fn runTypescript(file: []const u8, remaining_args: []const []const u8) !void {
     const allocator = std.heap.page_allocator;
+
+    // parse --out flag
+    const output_dir = try utils.parseOutputDir(remaining_args);
 
     if (output_dir) |dir| {
         std.debug.print(
@@ -40,7 +46,7 @@ pub fn runTypescript(file: []const u8, output_dir: ?[]const u8) !void {
     }
 
     // Compile the TypeScript file
-    try compileTypescript(file, output_dir);
+    try compileTypescript(file, output_dir, false);
 
     var args = std.ArrayList([]const u8).init(allocator);
     defer args.deinit();

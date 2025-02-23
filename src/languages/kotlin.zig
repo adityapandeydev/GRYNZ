@@ -5,14 +5,18 @@ pub fn compileKotlin(file: []const u8, output_dir: ?[]const u8, remaining_args: 
     const allocator = std.heap.page_allocator;
     var include_runtime = false;
 
+    // Filter out --out and its value from remaining_args
+    const filtered_args = try utils.filterOutFlag(allocator, remaining_args, "--out");
+    defer allocator.free(filtered_args);
+
     // Parse remaining arguments for -include-runtime
     var i: usize = 0;
-    while (i < remaining_args.len) {
-        if (std.mem.eql(u8, remaining_args[i], "-include-runtime")) {
+    while (i < filtered_args.len) {
+        if (std.mem.eql(u8, filtered_args[i], "-include-runtime")) {
             include_runtime = true;
             i += 1;
         } else {
-            std.debug.print("Unknown argument: {s}\n", .{remaining_args[i]});
+            std.debug.print("Unknown argument: {s}\n", .{filtered_args[i]});
             return error.UnknownArgument;
         }
     }

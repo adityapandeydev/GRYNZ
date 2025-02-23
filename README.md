@@ -7,6 +7,7 @@ Grynz is a modular, universal compiler designed to compile multiple programming 
 Grynz is in its early development stage and currently supports the following languages:
 - <img src="LanguageSvgs\c-original.svg" alt="C" width="20" height="15"/> **C** (via `gcc`)
 - <img src="LanguageSvgs\cplusplus-original.svg" alt="CPP" width="20" height="15"/> **C++** (via `g++`)
+- <img src="LanguageSvgs\erlang-original.svg" alt="Erlang" width="20" height="15"/> **Erlang** (via `erl`, rebar3 support coming soon)
 - <img src="LanguageSvgs\go-original.svg" alt="Go" width="20" height="15"/> **Go** (via `go build`)
 - <img src="LanguageSvgs\java-original.svg" alt="Java" width="20" height="15"/> **Java** (via `javac` and `java` for execution)
 - <img src="LanguageSvgs\javascript-original.svg" alt="JavaScript" width="20" height="15"/> **JavaScript** (via `node` for execution, and `pkg` for binary compilation)

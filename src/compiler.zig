@@ -2,6 +2,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 const c = @import("languages/c.zig");
 const cpp = @import("languages/cpp.zig");
+const elixir = @import("languages/elixir.zig");
 const erlang = @import("languages/erlang.zig");
 const go = @import("languages/go.zig");
 const java = @import("languages/java.zig");
@@ -59,6 +60,8 @@ pub fn handleRun(file: []const u8, remaining_args: []const []const u8) !void {
         try erlang.runErlang(file, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".class")) {
         try java.runJava(file, remaining_args);
+    } else if (std.mem.endsWith(u8, file, ".ex") or std.mem.endsWith(u8, file, ".exs")) {
+        try elixir.runElixir(file, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".js")) {
         try javascript.runJavascript(file);
     } else if (std.mem.endsWith(u8, file, ".jar")) {

@@ -2,6 +2,7 @@ const std = @import("std");
 const builtin = @import("builtin");
 const c = @import("languages/c.zig");
 const cpp = @import("languages/cpp.zig");
+const erlang = @import("languages/erlang.zig");
 const go = @import("languages/go.zig");
 const java = @import("languages/java.zig");
 const javascript = @import("languages/javascript.zig");
@@ -48,6 +49,8 @@ pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
         try c.compileC(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".cpp")) {
         try cpp.compileCpp(file, output_dir);
+    } else if (std.mem.endsWith(u8, file, ".erl")) {
+        try erlang.compileErlang(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".go")) {
         try go.compileGo(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".java")) {
@@ -73,11 +76,25 @@ pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
 pub fn handleRun(file: []const u8, remaining_args: []const []const u8) !void {
     var output_dir: ?[]const u8 = null;
 
-    if (remaining_args.len > 1 and std.mem.eql(u8, remaining_args[0], "--out")) {
-        output_dir = remaining_args[1];
+    // Parse --out flag
+    var i: usize = 0;
+    while (i < remaining_args.len) {
+        if (std.mem.eql(u8, remaining_args[i], "--out")) {
+            if (i + 1 < remaining_args.len) {
+                output_dir = remaining_args[i + 1];
+                i += 2;
+            } else {
+                std.debug.print("Error: --out requires an output directory\n", .{});
+                return error.MissingOutputDir;
+            }
+        } else {
+            i += 1;
+        }
     }
 
-    if (std.mem.endsWith(u8, file, ".class")) {
+    if (std.mem.endsWith(u8, file, ".beam")) {
+        try erlang.runErlang(file, output_dir, remaining_args);
+    } else if (std.mem.endsWith(u8, file, ".class")) {
         try java.runJava(file, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".js")) {
         try javascript.runJavascript(file);

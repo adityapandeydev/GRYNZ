@@ -7,7 +7,7 @@ pub fn build(b: *std.Build) void {
     const exe = b.addExecutable(.{
         .name = "grynz",
         .root_source_file = b.path("src/main.zig"),
-        .target = target,  // REQUIRED for Zig 0.13.0
+        .target = target,
         .optimize = optimize,
     });
 

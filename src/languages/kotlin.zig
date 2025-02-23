@@ -1,9 +1,22 @@
 const std = @import("std");
-const builtin = @import("builtin");
 const utils = @import("../utils.zig");
 
-pub fn compileKotlin(file: []const u8, output_dir: ?[]const u8, include_runtime: bool) !void {
+pub fn compileKotlin(file: []const u8, output_dir: ?[]const u8, remaining_args: []const []const u8) !void {
     const allocator = std.heap.page_allocator;
+    var include_runtime = false;
+
+    // Parse remaining arguments for -include-runtime
+    var i: usize = 0;
+    while (i < remaining_args.len) {
+        if (std.mem.eql(u8, remaining_args[i], "-include-runtime")) {
+            include_runtime = true;
+            i += 1;
+        } else {
+            std.debug.print("Unknown argument: {s}\n", .{remaining_args[i]});
+            return error.UnknownArgument;
+        }
+    }
+
     var args = std.ArrayList([]const u8).init(allocator);
     defer args.deinit();
 

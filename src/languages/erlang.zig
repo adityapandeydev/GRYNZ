@@ -18,37 +18,23 @@ pub fn compileErlang(file: []const u8, output_dir: ?[]const u8) !void {
     try utils.executeCommand(allocator, args.items);
 }
 
-pub fn runErlang(file: []const u8, output_dir: ?[]const u8, remaining_args: []const []const u8) !void {
+pub fn runErlang(file: []const u8, remaining_args: []const []const u8) !void {
     const allocator = std.heap.page_allocator;
     var entry_function: ?[]const u8 = null;
 
-    // Filter out --out and its value from remaining_args
-    var filtered_args = std.ArrayList([]const u8).init(allocator);
-    defer filtered_args.deinit();
-
+    // Parse remaining arguments for --entry
     var i: usize = 0;
     while (i < remaining_args.len) {
-        if (std.mem.eql(u8, remaining_args[i], "--out")) {
-            i += 2; // Skip --out and its value
-        } else {
-            try filtered_args.append(remaining_args[i]);
-            i += 1;
-        }
-    }
-
-    // Parse remaining arguments for --entry
-    i = 0;
-    while (i < filtered_args.items.len) {
-        if (std.mem.eql(u8, filtered_args.items[i], "--entry")) {
-            if (i + 1 < filtered_args.items.len) {
-                entry_function = filtered_args.items[i + 1];
+        if (std.mem.eql(u8, remaining_args[i], "--entry")) {
+            if (i + 1 < remaining_args.len) {
+                entry_function = remaining_args[i + 1];
                 i += 2;
             } else {
                 std.debug.print("Error: --entry requires an entry function\n", .{});
                 return error.MissingEntryFunction;
             }
         } else {
-            std.debug.print("Unknown argument: {s}\n", .{filtered_args.items[i]});
+            std.debug.print("Unknown argument: {s}\n", .{remaining_args[i]});
             return error.UnknownArgument;
         }
     }
@@ -68,10 +54,10 @@ pub fn runErlang(file: []const u8, output_dir: ?[]const u8, remaining_args: []co
 
     try args.append("erl");
 
-    if (output_dir) |dir| {
-        try args.append("-pa");
-        try args.append(dir);
-    }
+    // Use the directory of the file as the classpath
+    const file_dir = std.fs.path.dirname(file) orelse ".";
+    try args.append("-pa");
+    try args.append(file_dir);
 
     try args.append("-noshell");
     try args.append("-s");

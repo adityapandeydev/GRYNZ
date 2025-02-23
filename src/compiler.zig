@@ -14,7 +14,6 @@ const zigc = @import("languages/zig.zig");
 
 pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
     var output_dir: ?[]const u8 = null;
-    var include_runtime = false;
 
     // Parse remaining arguments
     var i: usize = 0;
@@ -27,12 +26,8 @@ pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
                 std.debug.print("Error: --out requires an output directory\n", .{});
                 return;
             }
-        } else if (std.mem.eql(u8, remaining_args[i], "-include-runtime")) {
-            include_runtime = true;
-            i += 1;
         } else {
-            std.debug.print("Unknown argument: {s}\n", .{remaining_args[i]});
-            return;
+            i += 1;
         }
     }
 
@@ -58,7 +53,7 @@ pub fn handleBuild(file: []const u8, remaining_args: []const []const u8) !void {
     } else if (std.mem.endsWith(u8, file, ".js")) {
         try javascript.compileJavascript(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".kt")) {
-        try kotlin.compileKotlin(file, output_dir, include_runtime);
+        try kotlin.compileKotlin(file, output_dir, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".py")) {
         try python.compilePython(file, output_dir);
     } else if (std.mem.endsWith(u8, file, ".rs")) {
@@ -93,7 +88,7 @@ pub fn handleRun(file: []const u8, remaining_args: []const []const u8) !void {
     }
 
     if (std.mem.endsWith(u8, file, ".beam")) {
-        try erlang.runErlang(file, output_dir, remaining_args);
+        try erlang.runErlang(file, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".class")) {
         try java.runJava(file, remaining_args);
     } else if (std.mem.endsWith(u8, file, ".js")) {
